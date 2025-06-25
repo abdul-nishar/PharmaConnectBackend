@@ -15,8 +15,12 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: '*', methods: ['GET', 'POST'] }
 });
-
-app.use(cors());
+//allow port 5173 for Vite development server
+app.use(cors({
+  origin: 'http://localhost:5173', // Adjust this to your frontend URL
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 app.use(express.json());
 app.use('/api', chatRoutes);
 
