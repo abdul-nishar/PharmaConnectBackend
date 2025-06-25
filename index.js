@@ -1,67 +1,26 @@
-import express , { json } from 'express';
-import { createServer } from 'http';
-import mongoose from 'mongoose';
-import cors from 'cors';
+import express from 'express';
+import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
-import Chat from './models/chat.js';
+import cors from 'cors';
+import connectDB from './config/db.js';
+import chatRoutes from './routes/chatRoutes.js';
+import handleSocket from './sockets/chatSockets.js';
 
 dotenv.config();
+connectDB();
 
 const app = express();
-const server = createServer(app);
+const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: '*', // Or set to your frontend's domain
-    methods: ['GET', 'POST']
-  }
+  cors: { origin: '*', methods: ['GET', 'POST'] }
 });
 
 app.use(cors());
-app.use(json());
+app.use(express.json());
+app.use('/api', chatRoutes);
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI,{
-    ssl: true,
-}).then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB error', err));
+handleSocket(io);
 
-// Socket.IO Chat Logic
-io.on('connection', (socket) => {
-  console.log('🟢 New client connected:', socket.id);
-
-  socket.on('joinChat', async (chatId) => {
-    socket.join(chatId);
-    const chat = await findById(chatId);
-    socket.emit('chatHistory', chat?.messageHistory || []);
-  });
-
-  socket.on('newMessage', async ({ chatId, role, message }) => {
-    const msg = { role, message, timestamp: new Date() };
-
-    let chat = await findById(chatId);
-    if (!chat) {
-      // New Chat
-      chat = new Chat({
-        title: message.slice(0, 30),
-        messageHistory: [msg],
-        lastMessage: msg
-      });
-    } else {
-      chat.messageHistory.push(msg);
-      chat.lastMessage = msg;
-    }
-
-    await chat.save();
-
-    io.to(chatId).emit('message', msg);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('🔴 Client disconnected:', socket.id);
-  });
-});
-
-server.listen(3000, () => {
-  console.log('🚀 Server running on http://localhost:3000');
-});
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`));
