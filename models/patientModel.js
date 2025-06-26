@@ -45,6 +45,10 @@ const patientSchema = new mongoose.Schema({
       message: "Passwords do not match",
     },
   },
+  dateOfBirth: {
+    type: Date,
+    required: [true, "Please provide your date of birth"],
+  },
   appointmentIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
