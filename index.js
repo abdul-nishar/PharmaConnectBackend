@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
-import chatRoutes from './routes/chatRoutes.js';
+import router from './routes/index.js';
 import handleSocket from './sockets/chatSockets.js';
 
 dotenv.config();
@@ -22,7 +22,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-app.use('/api', chatRoutes);
+app.use('/api', router);
 
 handleSocket(io);
 
