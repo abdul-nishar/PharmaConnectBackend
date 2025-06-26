@@ -1,8 +1,11 @@
-import chatRouter from "./chatRoutes";
-import express from 'express';
+import chatRouter from "./chatRoutes.js";
+import userRouter from "./userRoutes.js";
 
-const mainRouter = express.Router()
+import express from "express";
 
-mainRouter.use('/chat',chatRouter);
+const router = express.Router();
 
-export default mainRouter;
+router.use("/chat", chatRouter);
+router.use("/users", userRouter);
+
+export default router;
