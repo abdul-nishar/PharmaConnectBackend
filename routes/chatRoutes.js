@@ -1,5 +1,5 @@
 import express from "express";
-import Chat from "../models/chat.js";
+import Chat from "../models/chatModel.js";
 import { createChat } from "../controllers/chatController.js";
 
 const router = express.Router();
