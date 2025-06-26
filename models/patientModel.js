@@ -50,24 +50,22 @@ const patientSchema = new mongoose.Schema({
     required: [true, 'Please provide your date of birth'],
   },
   appointmentIds: [
-  {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Appointment',
-  }
-],
-
-chatIds: [
-  {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Chat',
-  }
-],
-
-orderIds: [
-  {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Order',
-  }
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Appointment',
+    }
+  ],
+  chatIds: [
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Chat',
+    }
+  ],
+  orderIds: [
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order',
+    }
 ],
 
 });
@@ -77,8 +75,6 @@ orderIds: [
  * @param {Function} next - Callback function to pass control to the next middleware.
  */
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
   next();
