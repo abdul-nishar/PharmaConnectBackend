@@ -1,5 +1,6 @@
 import express from "express";
 import * as authController from "../controllers/authController.js";
+import * as userController from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -31,5 +32,12 @@ router.get("/logout", authController.logout);
 
 // Middleware to protect routes
 router.use(authController.protect);
+
+/**
+ * @route PATCH /api/v1/users/updateMe
+ * @desc Update the current user's profile
+ * @access Private
+ */
+router.patch("/updateMe", userController.updateMe);
 
 export default router;
