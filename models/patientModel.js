@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import validator from 'validator';
-import bcrypt from 'bcrypt';
+import mongoose from "mongoose";
+import validator from "validator";
+import bcrypt from "bcrypt";
 
 /**
  * Patient schema for the application.
@@ -15,66 +15,61 @@ import bcrypt from 'bcrypt';
 const patientSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please tell us your name!'],
+    required: [true, "Please tell us your name!"],
   },
   email: {
     type: String,
-    required: [true, 'Please tell us your email address'],
+    required: [true, "Please tell us your email address"],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Please enter a valid email address'],
+    validate: [validator.isEmail, "Please enter a valid email address"],
   },
   role: {
     type: String,
-    enum: ['patient', 'doctor'],
-    default: 'patient',
+    enum: ["patient", "doctor"],
+    default: "patient",
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password!'],
+    required: [true, "Please provide a password!"],
     minlength: 8,
     select: false,
   },
   passwordConfirm: {
     type: String,
-    required: [true, 'Please confirm your password!'],
+    required: [true, "Please confirm your password!"],
     validate: {
       validator: function (el) {
         return el === this.password;
       },
-      message: 'Passwords do not match',
+      message: "Passwords do not match",
     },
-  },
-  dateOfBirth: {
-    type: Date,
-    required: [true, 'Please provide your date of birth'],
   },
   appointmentIds: [
     {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Appointment',
-    }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Appointment",
+    },
   ],
   chatIds: [
     {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Chat',
-    }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Chat",
+    },
   ],
   orderIds: [
     {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Order',
-    }
-],
-
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+    },
+  ],
 });
 
 /**
  * Pre-save middleware to hash the password.
  * @param {Function} next - Callback function to pass control to the next middleware.
  */
-userSchema.pre('save', async function (next) {
+patientSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
   next();
@@ -86,10 +81,13 @@ userSchema.pre('save', async function (next) {
  * @param {string} userPassword - The stored hashed password.
  * @returns {Promise<boolean>} - Whether the passwords match.
  */
-userSchema.methods.passwordVerification = async function (candidatePassword, userPassword) {
+patientSchema.methods.passwordVerification = async function (
+  candidatePassword,
+  userPassword
+) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-const Patient = mongoose.model('Patient', patientSchema);
+const Patient = mongoose.model("Patient", patientSchema);
 
 export default Patient;
