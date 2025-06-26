@@ -34,7 +34,21 @@ router.get("/logout", authController.logout);
 router.use(authController.protect);
 
 /**
- * @route PATCH /api/v1/users/updateMe
+ * @route GET /api/users/me
+ * @desc Get current user's basic profile data
+ * @access Private
+ */
+router.get("/me", userController.getMe);
+
+/**
+ * @route GET /api/users/profile
+ * @desc Get current user's complete profile data with populated references
+ * @access Private
+ */
+router.get("/profile", userController.getUserProfileData);
+
+/**
+ * @route PATCH /api/users/updateMe
  * @desc Update the current user's profile
  * @access Private
  */
