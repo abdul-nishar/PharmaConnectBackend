@@ -47,7 +47,7 @@ const patientSchema = new mongoose.Schema({
   },
   dateOfBirth: {
     type: Date,
-    required: [true, 'Please provide your date of birth'],
+    // required: [true, 'Please provide your date of birth'],
   },
   appointmentIds: [
     {
@@ -74,11 +74,12 @@ const patientSchema = new mongoose.Schema({
  * Pre-save middleware to hash the password.
  * @param {Function} next - Callback function to pass control to the next middleware.
  */
-userSchema.pre('save', async function (next) {
+patientSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
   next();
 });
+
 
 /**
  * Method to verify if the provided password matches the stored password.
@@ -86,7 +87,7 @@ userSchema.pre('save', async function (next) {
  * @param {string} userPassword - The stored hashed password.
  * @returns {Promise<boolean>} - Whether the passwords match.
  */
-userSchema.methods.passwordVerification = async function (candidatePassword, userPassword) {
+patientSchema.methods.passwordVerification = async function (candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 

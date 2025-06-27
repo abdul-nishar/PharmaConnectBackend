@@ -1,5 +1,6 @@
 import express from 'express';
 import * as authController from '../controllers/authController.js';
+import { protect } from '../middlewares/protect.js';
 
 const router = express.Router();
 
@@ -30,7 +31,7 @@ router.post('/signup', authController.signUp);
 router.get('/logout', authController.logout);
 
 // Middleware to protect routes
-router.use(authController.protect);
+// router.use(protect);
 
 
 

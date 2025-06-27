@@ -1,5 +1,5 @@
 import { addMessage } from '../controllers/chatController.js';
-import Chat from '../models/chatModelS.js';
+import Chat from '../models/chatModel.js';
 
 export default function handleSocket(io) {
   io.on('connection', (socket) => {
