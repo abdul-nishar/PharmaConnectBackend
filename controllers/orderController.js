@@ -55,6 +55,7 @@ export const createOrder = async (req, res) => {
 // Get order by ID
 export const getOrderById = async (req, res) => {
   try {
+    
     const order = await Order.findById(req.params.id)
       .populate('customerId', 'name email')
       .populate('orderItems.medicineId', 'name price image');

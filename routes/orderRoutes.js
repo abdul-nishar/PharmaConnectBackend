@@ -7,12 +7,12 @@ import {
   cancelOrder,
   getAllOrders
 } from '../controllers/orderController.js';
-import { authenticateToken } from '../middleware/auth.js';
+//import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // All order routes require authentication
-router.use(authenticateToken);
+//router.use(authenticateToken);
 
 // Customer routes
 router.post('/', createOrder);

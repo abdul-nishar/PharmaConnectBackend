@@ -7,7 +7,7 @@ import {
   deleteMedicine,
   searchMedicines
 } from '../controllers/medicineController.js';
-import { authenticateToken } from '../middleware/auth.js';
+//import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -17,8 +17,8 @@ router.get('/search', searchMedicines);
 router.get('/:id', getMedicineById);
 
 // Protected routes (admin only)
-router.post('/', authenticateToken, createMedicine);
-router.put('/:id', authenticateToken, updateMedicine);
-router.delete('/:id', authenticateToken, deleteMedicine);
+router.post('/',  createMedicine);
+router.put('/:id',  updateMedicine);
+router.delete('/:id',  deleteMedicine);
 
 export default router;

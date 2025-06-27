@@ -7,6 +7,7 @@ import connectDB from './config/db.js';
 import router from './routes/index.js';
 import handleSocket from './sockets/chatSockets.js';
 
+
 dotenv.config();
 connectDB();
 
@@ -23,6 +24,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use('/api', router);
+
 
 handleSocket(io);
 
