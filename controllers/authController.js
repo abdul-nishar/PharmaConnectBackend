@@ -130,6 +130,8 @@ export const logout = (req, res) => {
 export const protect = catchAsync(async (req, res, next) => {
   let token;
 
+  console.log('Token: ', req.headers.authorization,'Cookies: ', JSON.stringify(req.cookies));
+
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   } else if (req.cookies?.jwt && req.cookies.jwt !== 'loggedout') {
