@@ -8,6 +8,7 @@ import router from "./routes/index.js";
 import handleSocket from "./sockets/chatSockets.js";
 import cookieParser from "cookie-parser";
 
+
 dotenv.config();
 connectDB();
 
@@ -30,6 +31,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api", router);
+
 
 handleSocket(io);
 
