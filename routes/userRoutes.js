@@ -1,6 +1,6 @@
-import express from 'express';
-import * as authController from '../controllers/authController.js';
-import { protect } from '../middlewares/protect.js';
+import express from "express";
+import * as authController from "../controllers/authController.js";
+import * as userController from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -14,25 +14,44 @@ const router = express.Router();
  * @desc Log in a user
  * @access Public
  */
-router.post('/login', authController.login);
+router.post("/login", authController.login);
 
 /**
  * @route POST /api/users/signup
  * @desc Register a new user
  * @access Public
  */
-router.post('/signup', authController.signUp);
+router.post("/signup", authController.signUp);
 
 /**
  * @route GET /api/users/logout
  * @desc Log out a user
  * @access Private
  */
-router.get('/logout', authController.logout);
+router.get("/logout", authController.logout);
 
 // Middleware to protect routes
-// router.use(protect);
+router.use(protect);
 
+/**
+ * @route GET /api/users/me
+ * @desc Get current user's basic profile data
+ * @access Private
+ */
+router.get("/me", userController.getMe);
 
+/**
+ * @route GET /api/users/profile
+ * @desc Get current user's complete profile data with populated references
+ * @access Private
+ */
+router.get("/profile", userController.getUserProfileData);
+
+/**
+ * @route PATCH /api/users/updateMe
+ * @desc Update the current user's profile
+ * @access Private
+ */
+router.patch("/updateMe", userController.updateMe);
 
 export default router;
