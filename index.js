@@ -16,14 +16,20 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
+    origin: [
+      "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
 //allow port 5173 for Vite development server
 app.use(
   cors({
-    origin: "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
+    origin: [
+      "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
