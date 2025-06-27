@@ -18,7 +18,7 @@ const io = new Server(server, {
 //allow port 5173 for Vite development server
 app.use(cors({
   origin: 'http://localhost:5173', // Adjust this to your frontend URL
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   credentials: true
 }));
 app.use(express.json());
