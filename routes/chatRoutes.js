@@ -1,26 +1,12 @@
 import express from "express";
-import Chat from "../models/chatModel.js";
-import { createChat } from "../controllers/chatController.js";
+import { getChatSummaries, getChatMessages } from "../controllers/chatController.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const chats = await Chat.find().select("id title lastMessage timestamp");
-  res.json(chats);
-});
+// GET /api/chat/chatSummaries - Returns a list of chat summaries for the sidebar
+router.get('/chatSummaries', getChatSummaries);
 
-router.get("/:id", async (req, res) => {
-  const chat = await Chat.findById(req.params.id);
-  res.json(chat?.messageHistory || []);
-});
-
-router.post('/chats', async (req, res) => {
-  try {
-    const chat = await createChat(req.body);
-    res.json(chat);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
+// GET /api/chat/:chatId/messages - Returns message history for a specific chat, only if user has access
+router.get('/:chatId/messages', getChatMessages);
 
 export default router;
