@@ -42,7 +42,6 @@ export const getUserProfileData = catchAsync(async (req, res, next) => {
  */
 export const getMe = catchAsync(async (req, res, next) => {
   let user;
-  
   if (req.user.role === "patient") {
     user = await Patient.findById(req.user.id);
   } else if (req.user.role === "doctor") {
@@ -53,10 +52,18 @@ export const getMe = catchAsync(async (req, res, next) => {
     return next(new AppError("User not found", 404));
   }
 
+  // Convert to plain object and remove sensitive/restricted fields
+  let userObj = user.toObject();
+  delete userObj.password;
+  delete userObj.passwordConfirm;
+  Object.keys(userObj).forEach(key => {
+    if (key.endsWith('Ids')) delete userObj[key];
+  });
+
   res.status(200).json({
     status: "success",
     data: {
-      user,
+      user: userObj,
     },
   });
 });
