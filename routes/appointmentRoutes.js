@@ -1,10 +1,10 @@
 import express from "express";
 import { appointmentController } from "../controllers/appointmentController.js";
-import { authController } from "../controllers/authController.js";
+import { protect } from "../controllers/authController.js";
 const router = express.Router();
 
 // Middleware to protect routes
-router.use(authController.protect);
+router.use(protect);
 
 /**
  * @route POST /api/appointments/

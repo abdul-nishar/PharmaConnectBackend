@@ -1,10 +1,10 @@
 import express from "express";
 import { doctorController } from "../controllers/doctorController.js";
-import { authController } from "../controllers/authController.js";
+import { protect } from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.use(authController.protect);
+router.use(protect);
 
 /**
  * @route   GET /api/doctors
