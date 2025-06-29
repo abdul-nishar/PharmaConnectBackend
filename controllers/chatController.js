@@ -1,7 +1,7 @@
 import Chat from '../models/chatModel.js';
-import OpenAIClient from '../utils/openaiClient.js';
 import Patient from '../models/patientModel.js';
 import Doctor from '../models/doctorModel.js';
+import ai from '../utils/aiClient.js';
 
 // Controller for chat summaries
 export const getChatSummaries = async (req, res) => {
@@ -45,25 +45,22 @@ export const getChatMessages = async (req, res) => {
   }
 };
 
-// Helper: Format chat history for OpenAI API
-const formatChatHistoryForOpenAI = (history) => {
-  return history.map(msg => ({
-    role: msg.role.toLowerCase() === 'assistant' ? 'assistant' : 'user',
-    content: msg.message
-  }));
+// Helper: Format chat history for Gemini API
+const formatChatHistoryForGemini = (history) => {
+  // Gemini expects a single string or array of messages
+  // We'll join messages for context
+  return history.map(msg => `${msg.role}: ${msg.message}`).join("\n");
 };
 
-// Controller: Get AI response from OpenAI GPT-4
+// Controller: Get AI response from Gemini
 export const getAIResponse = async (chatHistory) => {
-  console.log("Generating AI response for chat history:", chatHistory);
-  const input = formatChatHistoryForOpenAI(chatHistory);
-  console.log("Formatted input for OpenAI:", input);
-  const response = await OpenAIClient.responses.create({
-    model: "gpt-4.1",
-    input
+  // import ai from openaiClient.js (now Gemini)
+  const contents = formatChatHistoryForGemini(chatHistory);
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents
   });
-  console.log("OpenAI response received:", response);
-  return response.output_text;
+  return response.text;
 };
 
 // Controller: Get full message history for a chat (for sockets)
