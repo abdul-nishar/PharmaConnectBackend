@@ -1,0 +1,381 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\setlength{\headheight}{24.64995pt}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Define custom colors
+\definecolor{primaryblue}{RGB}{41, 128, 185}
+\definecolor{secondaryblue}{RGB}{52, 152, 219}
+\definecolor{lightgray}{RGB}{236, 240, 241}
+\definecolor{darkgray}{RGB}{52, 73, 94}
+
+% Page setup
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{primaryblue}{Technical Document}}
+\lhead{\textcolor{primaryblue}{Use Case Project}}
+\rfoot{\textcolor{darkgray}{\thepage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{primaryblue}\leaders\hrule height \headrulewidth\hfill}}
+
+% Title formatting
+\titleformat{\section}
+    {\Large\bfseries\color{primaryblue}}
+    {\thesection}{1em}{}
+
+\titleformat{\subsection}
+    {\large\bfseries\color{secondaryblue}}
+    {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+    {\normalsize\bfseries\color{darkgray}}
+    {\thesubsubsection}{1em}{}
+
+% Custom environments
+\newmdenv[
+    backgroundcolor=lightgray,
+    linecolor=primaryblue,
+    linewidth=2pt,
+    leftmargin=0pt,
+    rightmargin=0pt,
+    innerleftmargin=10pt,
+    innerrightmargin=10pt,
+    innertopmargin=10pt,
+    innerbottommargin=10pt,
+    roundcorner=5pt
+]{infobox}
+
+% Title page customization
+\title{
+    \vspace*{-2cm}
+    {\Huge\bfseries\color{primaryblue} Pharma Connect}\\[0.7cm]
+    {\Large\color{secondaryblue} A Full Stack Healthcare Application}\\[0.5cm]
+    {\large\color{darkgray} Technical Documentation \& System Architecture}\\[0.7cm]
+    \rule{\textwidth}{1.5pt}\\[0.7cm]
+    {\normalsize\color{primaryblue}\textbf{Development Team:}}\\[0.2cm]
+    \begin{tabular}{c}
+        \textbf{Gokul MR} \\
+        \textbf{Sheik Abdul Nishar} \\
+        \textbf{Shresht Rai} \\
+        \textbf{Phad Rohan Vaijnath} \\
+        \textbf{Vedant Adlak}
+    \end{tabular}\\[0.7cm]
+    \rule{\textwidth}{0.5pt}\\[0.5cm]
+    {\normalsize\color{darkgray} \today}
+}
+
+% Remove author/date blocks since now in title
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\newpage
+
+% In the document body, after \maketitle, add a colored box for the team and date
+\begin{infobox}
+\section*{Executive Summary}
+\textbf{Pharma Connect} is a comprehensive full-stack healthcare application designed to revolutionize patient-doctor interactions and pharmaceutical services. The platform integrates advanced AI capabilities, streamlined appointment management, and e-commerce functionality to create a unified healthcare ecosystem.
+
+\vspace{0.3cm}
+\textbf{Key Features:}
+\begin{itemize}[leftmargin=1cm]
+    \item AI-powered patient consultation chatbot
+    \item Integrated appointment scheduling system
+    \item Online pharmacy with delivery tracking
+    \item Comprehensive health record management
+    \item Role-based access control for patients and doctors
+\end{itemize}
+\vspace{0.3cm}
+\end{infobox}
+
+\section{Application Architecture Overview}
+
+The Pharma Connect platform follows a modern full-stack architecture with distinct user interfaces for different stakeholders, ensuring optimal user experience and functionality separation.
+
+\section{Patient Interface Modules}
+
+\subsection{Intelligent ChatBot System}
+\textbf{Core Functionality:} AI-powered conversational interface utilizing GPT technology
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{Patient Query Resolution:} Real-time responses to health-related inquiries
+    \item \textbf{Medical Triage:} Preliminary assessment and recommendation system
+    \item \textbf{24/7 Availability:} Round-the-clock patient support
+\end{itemize}
+
+\subsection{Appointment Management System}
+\textbf{Core Functionality:} Comprehensive scheduling and tracking platform
+
+\subsubsection{Doctor Discovery \& Selection}
+\begin{itemize}[leftmargin=1cm]
+    \item Browse available healthcare providers by specialization
+    \item View doctor profiles, ratings, and availability
+    \item Filter by location, expertise, and consultation fees
+\end{itemize}
+
+\subsubsection{Appointment Lifecycle Management}
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{Create New Appointments:} Intuitive booking interface
+    \item \textbf{Appointment History:} Complete record of past and upcoming consultations
+    \item \textbf{My Appointments Dashboard:} Centralized view of all scheduled appointments
+    \item \textbf{Modification \& Cancellation:} Flexible rescheduling options
+\end{itemize}
+
+\subsection{Integrated Pharmacy Store}
+\textbf{Core Functionality:} Full-featured e-commerce platform for pharmaceutical products
+
+\subsubsection{Product Catalog \& Search}
+\begin{itemize}[leftmargin=1cm]
+    \item Advanced search functionality
+    \item Interactive product cards featuring:
+    \begin{itemize}
+        \item High-resolution product images
+        \item Pricing information
+        \item Basic Description
+        \item One-click add-to-cart functionality
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Shopping Cart \& Checkout Process}
+\begin{itemize}[leftmargin=1cm]
+    \item Dynamic cart management with quantity adjustments
+    \item Real-time price calculations including taxes and delivery charges
+    \item Multiple delivery address management
+    \item Seamless checkout experience
+\end{itemize}
+
+\subsection{Secure Checkout System}
+\textbf{Core Functionality:} Streamlined payment and delivery management
+
+\subsubsection{Address \& Payment Management}
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{Delivery Addresses:} Save multiple addresses with easy selection
+    \item \textbf{Order Summary:} Detailed breakdown of items and quantities
+    \item \textbf{Payment Options:} Multiple secure payment gateways
+    \item \textbf{Order Confirmation:} Instant confirmation with tracking details
+\end{itemize}
+
+\subsection{Order Tracking \& History}
+\textbf{Core Functionality:} Comprehensive order management and tracking system
+
+\subsubsection{Order Management Features}
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{Real-time Tracking:} Live updates on order status and location
+    \item \textbf{Order History:} Complete purchase history with detailed records
+    \item \textbf{Delivery Management:} Estimated delivery dates and time slots
+    \item \textbf{Cancellation Policy:} Smart cancellation system with time-based restrictions
+\end{itemize}
+
+\section{Doctor Interface Modules}
+
+\subsection{Professional Appointment Dashboard}
+\textbf{Core Functionality:} Comprehensive patient management and consultation platform
+
+\subsubsection{Appointment Queue Management}
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{Active Appointments:} View pending and scheduled consultations
+    \item \textbf{Patient Search:} Quick patient lookup by name or ID
+    \item \textbf{Appointment History:} Access to complete consultation records
+\end{itemize}
+
+\subsubsection{Patient Records \& Documentation}
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{Medical History Access:} Comprehensive patient background information
+    \item \textbf{Interactive Report System:} Collapsible accordion interface for easy navigation
+    \item \textbf{Digital Prescription Pad:} Streamlined prescription creation and management
+\end{itemize}
+
+\subsubsection{Consultation Documentation}
+\textbf{Comprehensive Report Generation System:}
+\begin{itemize}[leftmargin=1cm]
+    \item Patient demographic information (Name, Age, Weight, Height)
+    \item Clinical observations and comments
+    \item Detailed diagnosis documentation
+    \item Digital prescription management
+    \item Treatment plan recommendations
+\end{itemize}
+
+\section{Database Architecture}
+
+\subsection{Data Model Overview}
+The application utilizes a NoSQL document-based database structure optimized for scalability and performance.
+
+\subsubsection{User Management Collections}
+
+\textbf{Patient Collection Schema:}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{name} -- Patient's full name (String, required)
+    \item \texttt{email} -- Unique email address (String, required, unique)
+    \item \texttt{role} -- User role (\texttt{patient} or \texttt{doctor}, default: \texttt{patient})
+    \item \texttt{password} -- Hashed password (String, required)
+    \item \texttt{dateOfBirth} -- Date of birth (Date, required)
+    \item \texttt{appointmentIds} -- Array of appointment ObjectIds
+    \item \texttt{chatIds} -- Array of chat ObjectIds
+    \item \texttt{orderIds} -- Array of order ObjectIds
+\end{itemize}
+
+\textbf{Doctor Collection Schema:}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{name} -- Doctor's full name (String, required)
+    \item \texttt{email} -- Unique email address (String, required, unique)
+    \item \texttt{role} -- User role (\texttt{doctor}, default: \texttt{doctor})
+    \item \texttt{password} -- Hashed password (String, required)
+    \item \texttt{specialization} -- Medical specialty (String, required, enum)
+    \item \texttt{appointmentIds} -- Array of appointment ObjectIds
+    \item \texttt{consultationFee} -- Consultation fee (Number)
+    \item \texttt{experience} -- Years of experience (Number)
+    \item \texttt{location} -- Practice location (String, required)
+    \item \texttt{availability} -- Weekly availability (Object: days mapped to time slots)
+\end{itemize}
+
+\subsubsection{Core Business Logic Collections}
+
+\textbf{Appointment Collection Schema:}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{patientId} -- Reference to patient document (ObjectId, required)
+    \item \texttt{doctorId} -- Reference to doctor document (ObjectId, required)
+    \item \texttt{appointmentDate} -- Scheduled date (Date, required, must be future)
+    \item \texttt{appointmentTime} -- Scheduled time (String, required)
+    \item \texttt{status} -- Appointment state (\texttt{Pending}, \texttt{Completed}, \texttt{Cancelled})
+    \item \texttt{consultationFee} -- Fee for the appointment (Number, required)
+    \item \texttt{consultationReport} -- Structured report (name, age, weight, height, comment, diagnosis, prescription)
+    \item \texttt{createdAt}, \texttt{updatedAt} -- Timestamps
+\end{itemize}
+
+\textbf{Medicine Collection Schema:}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{name} -- Product name (String, required)
+    \item \texttt{price} -- Price (Number, required)
+    \item \texttt{shortDesc} -- Short description (String, required)
+    \item \texttt{image} -- Image URL (String, required)
+    \item \texttt{category} -- Category (String, default: General)
+    \item \texttt{createdAt}, \texttt{updatedAt} -- Timestamps
+\end{itemize}
+
+\textbf{Order Collection Schema:}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{customerId} -- Reference to patient (ObjectId, required)
+    \item \texttt{orderItems} -- Array of \{medicineId, quantity, unitPrice\}
+    \item \texttt{totalPrice} -- Total order price (Number, required)
+    \item \texttt{orderStatus} -- (\texttt{pending}, \texttt{delivered}, \texttt{cancelled})
+    \item \texttt{deliveryDate} -- Delivery date (Date, required)
+    \item \texttt{shippingAddress} -- Delivery address (String, required)
+    \item \texttt{createdAt}, \texttt{updatedAt} -- Timestamps
+\end{itemize}
+
+\textbf{Chat Collection Schema:}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{title} -- Chat title (String, required)
+    \item \texttt{lastMessage} -- Last message object (role, message, timestamp)
+    \item \texttt{messageHistory} -- Array of messages (role: System/User/Assistant, message, timestamp)
+\end{itemize}
+
+\vspace{1cm}
+\begin{infobox}
+\section*{Technology Stack Summary}
+\textbf{Frontend:} Modern responsive web application with mobile-first design\\
+\textbf{Backend:} RESTful API architecture with microservices\\
+\textbf{Database:} NoSQL document store for flexible data management\\
+\textbf{AI Integration:} GPT-powered conversational AI for patient interactions\\
+\textbf{Security:} End-to-end encryption with role-based access control
+\vspace{0.3cm}
+\end{infobox}
+
+% =====================
+% API Endpoints & Middleware Section
+% =====================
+
+
+\section{API Endpoints and Middleware}
+
+\subsection{Overview}
+Pharma Connect exposes a comprehensive RESTful API and real-time socket interface for all core features. This section documents all available endpoints, their expected inputs/outputs, authentication requirements, and the middleware stack.
+
+\subsection{Authentication and Middleware}
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{CORS Middleware:} Configured to allow requests from the frontend origin, supports credentials (cookies).
+    \item \textbf{Cookie Parser:} Parses cookies for JWT authentication.
+    \item \textbf{JWT Authentication:} Protects private routes, verifies user identity via signed cookies.
+    \item \textbf{Role-based Access Control:} Restricts access to certain endpoints (e.g., doctor-only or patient-only routes).
+    \item \textbf{Error Handling:} Centralized error controller for consistent API error responses.
+    \item \textbf{Data Sanitization:} Sensitive fields (e.g., password, internal IDs) are never exposed in API responses.
+\end{itemize}
+
+\subsection{User and Auth Routes}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{POST /api/auth/register} -- Register a new patient or doctor. \textit{(Public)}
+    \item \texttt{POST /api/auth/login} -- Login, returns JWT in HTTP-only cookie. \textit{(Public)}
+    \item \texttt{POST /api/auth/logout} -- Logout, clears JWT cookie. \textit{(Authenticated)}
+    \item \texttt{GET /api/users/me} -- Get current user profile. \textit{(Authenticated)}
+    \item \texttt{PATCH /api/users/me} -- Update user profile. \textit{(Authenticated)}
+    \item \texttt{GET /api/doctors} -- List all doctors (with filters). \textit{(Authenticated)}
+    \item \texttt{GET /api/doctors/:id} -- Get doctor profile by ID. \textit{(Authenticated)}
+\end{itemize}
+
+\subsection{Appointment Routes}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{POST /api/appointments} -- Book a new appointment. \textit{(Patient only)}
+    \item \texttt{GET /api/appointments} -- List user's appointments. \textit{(Authenticated)}
+    \item \texttt{GET /api/appointments/:id} -- Get appointment details. \textit{(Authenticated)}
+    \item \texttt{PATCH /api/appointments/:id} -- Update appointment (e.g., reschedule, add report). \textit{(Doctor or patient)}
+    \item \texttt{DELETE /api/appointments/:id} -- Cancel appointment. \textit{(Doctor or patient)}
+\end{itemize}
+
+\subsection{Medicine and Order Routes}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{GET /api/medicines} -- List all medicines. \textit{(Authenticated)}
+    \item \texttt{GET /api/medicines/:id} -- Get medicine details. \textit{(Authenticated)}
+    \item \texttt{POST /api/orders} -- Place a new order. \textit{(Patient only)}
+    \item \texttt{GET /api/orders} -- List user's orders. \textit{(Authenticated)}
+    \item \texttt{GET /api/orders/:id} -- Get order details. \textit{(Authenticated)}
+\end{itemize}
+
+\subsection{Chat and AI Assistant Routes}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{GET /api/chats} -- List all chat summaries for user. \textit{(Authenticated)}
+    \item \texttt{POST /api/chats} -- Create a new chat (with doctor or AI). \textit{(Authenticated)}
+    \item \texttt{GET /api/chats/:id/messages} -- Get message history for a chat. \textit{(Authenticated)}
+    \item \texttt{POST /api/chats/:id/messages} -- Send a new message (triggers AI if applicable). \textit{(Authenticated)}
+\end{itemize}
+
+\subsection{Socket Events}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{connect} -- Establishes real-time connection (JWT required).
+    \item \texttt{joinChat} -- Join a chat room by chat ID.
+    \item \texttt{sendMessage} -- Send a message to a chat (broadcasts to participants).
+    \item \texttt{newMessage} -- Event emitted to clients when a new message arrives.
+    \item \texttt{aiReply} -- Event emitted when AI assistant responds.
+\end{itemize}
+
+\subsection{Error Handling}
+All API errors follow a consistent JSON format:
+\begin{verbatim}
+{
+  "status": "error",
+  "message": "Error description",
+  "details": { ... }
+}
+\end{verbatim}
+
+\subsection{Example API Call}
+\begin{verbatim}
+POST /api/auth/login
+{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}
+// Response: Sets HTTP-only cookie, returns sanitized user object
+\end{verbatim}
+
+\end{document}

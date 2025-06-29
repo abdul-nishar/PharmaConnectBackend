@@ -1,0 +1,328 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Define custom colors
+\definecolor{primaryblue}{RGB}{41, 128, 185}
+\definecolor{secondaryblue}{RGB}{52, 152, 219}
+\definecolor{lightgray}{RGB}{236, 240, 241}
+\definecolor{darkgray}{RGB}{52, 73, 94}
+
+% Title formatting
+\titleformat{\section}
+    {\Large\bfseries\color{primaryblue}}
+    {\thesection}{1em}{}
+
+\titleformat{\subsection}
+    {\large\bfseries\color{secondaryblue}}
+    {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+    {\normalsize\bfseries\color{darkgray}}
+    {\thesubsubsection}{1em}{}
+
+% Custom environments
+\newmdenv[
+    backgroundcolor=lightgray,
+    linecolor=primaryblue,
+    linewidth=2pt,
+    leftmargin=0pt,
+    rightmargin=0pt,
+    innerleftmargin=10pt,
+    innerrightmargin=10pt,
+    innertopmargin=10pt,
+    innerbottommargin=10pt,
+    roundcorner=5pt
+]{infobox}
+
+% Title page customization
+\title{
+    \vspace*{-2cm}
+    {\Huge\bfseries\color{primaryblue} Pharma Connect Backend Presentation}\\[0.7cm]
+    {\Large\color{secondaryblue} Technical Walkthrough \\ \& Presentation Speech}\\[0.5cm]
+    {\large\color{darkgray} System Architecture, API, Microservices, and More}\\[0.7cm]
+    \rule{\textwidth}{1.5pt}\\[0.7cm]
+    {\normalsize\color{primaryblue}\textbf{Development Team:}}\\[0.2cm]
+    \begin{tabular}{c}
+        \textbf{Gokul MR} \\
+        \textbf{Sheik Abdul Nishar} \\
+        \textbf{Shresht Rai} \\
+        \textbf{Phad Rohan Vaijnath} \\
+        \textbf{Vedant Adlak}
+    \end{tabular}\\[0.7cm]
+    \rule{\textwidth}{0.5pt}\\[0.5cm]
+    {\normalsize\color{darkgray} \today}
+}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+% =====================
+% Slide 1: Introduction
+% =====================
+
+\begin{infobox}
+\section*{Slide 1: Introduction}
+Welcome to the backend presentation of \textbf{Pharma Connect}. This talk will cover our backend's architecture, API, authentication, database, real-time chat, error handling, and future directions.
+\end{infobox}
+
+% =====================
+% Slide 2: System Overview
+% =====================
+
+\section*{Slide 2: System Overview}
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{Purpose:} Enable seamless patient-doctor-pharmacy interactions.
+    \item \textbf{Core Features:} Authentication, user management, appointments, e-commerce, chat, and AI assistant.
+    \item \textbf{Tech Stack:} Node.js, Express, MongoDB, Socket.IO, Gemini AI, JWT, Docker (for deployment).
+    \item \textbf{Architecture:} Modular monolith, organized by feature.
+\end{itemize}
+
+% =====================
+% Slide 3: Codebase Structure
+% =====================
+
+\section*{Slide 3: Codebase Structure}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{controllers/} -- Business logic for each domain (auth, user, chat, appointment, etc).
+    \item \texttt{models/} -- Mongoose schemas for all collections.
+    \item \texttt{routes/} -- Express routers for each API domain.
+    \item \texttt{sockets/} -- Real-time chat logic (Socket.IO).
+    \item \texttt{utils/} -- Helpers (error, async, AI client).
+    \item \texttt{config/} -- Database connection.
+    \item \texttt{index.js} -- App entrypoint, middleware, server, and socket setup.
+\end{itemize}
+
+% =====================
+% Slide 4: API & Routing
+% =====================
+
+\section*{Slide 4: API \& Routing}
+\begin{itemize}[leftmargin=1cm]
+    \item RESTful API under \texttt{/api}.
+    \item Modular routers for users, doctors, appointments, medicines, orders, and chat.
+    \item Middleware: CORS, cookie-parser, JWT authentication, error handler.
+    \item All private routes require JWT (in HTTP-only cookie).
+\end{itemize}
+
+% =====================
+% Slide 5: Authentication & Security
+% =====================
+
+\section*{Slide 5: Authentication \& Security}
+\begin{itemize}[leftmargin=1cm]
+    \item JWT-based authentication, issued on login/registration.
+    \item Secure cookies, CORS, and data sanitization.
+    \item Role-based access control (patient, doctor).
+    \item Passwords hashed with bcrypt.
+    \item Sensitive fields never exposed in API responses.
+\end{itemize}
+
+% =====================
+% Slide 6: Database Design
+% =====================
+
+\section*{Slide 6: Database Design}
+\begin{itemize}[leftmargin=1cm]
+    \item MongoDB with Mongoose ODM.
+    \item Collections: Patient, Doctor, Appointment, Medicine, Order, Chat.
+    \item Relationships via ObjectId references (e.g., appointmentIds, chatIds).
+    \item Schemas enforce validation and business rules.
+\end{itemize}
+
+% =====================
+% Slide 7: Real-Time Chat & AI
+% =====================
+
+\section*{Slide 7: Real-Time Chat \& AI}
+\begin{itemize}[leftmargin=1cm]
+    \item Socket.IO for real-time chat between users and doctors.
+    \item AI assistant (Gemini) for instant, context-aware patient support.
+    \item Socket events: joinChat, newMessage, message, chatHistory.
+    \item AI replies are generated and broadcast in real time.
+\end{itemize}
+
+% =====================
+% Slide 8: Error Handling & Middleware
+% =====================
+
+\section*{Slide 8: Error Handling \& Middleware}
+\begin{itemize}[leftmargin=1cm]
+    \item Centralized error controller for uniform API responses.
+    \item Custom AppError class for operational errors.
+    \item catchAsync utility for async error handling.
+    \item Consistent error format for frontend consumption.
+\end{itemize}
+
+% =====================
+% Slide 9: API Endpoints
+% =====================
+
+\section*{Slide 9: API Endpoints}
+\begin{itemize}[leftmargin=1cm]
+    \item \texttt{POST /api/auth/register} -- Register patient/doctor.
+    \item \texttt{POST /api/auth/login} -- Login, sets JWT cookie.
+    \item \texttt{GET /api/users/me} -- Get current user profile.
+    \item \texttt{GET /api/doctors} -- List doctors.
+    \item \texttt{POST /api/appointments} -- Book appointment.
+    \item \texttt{GET /api/medicines} -- List medicines.
+    \item \texttt{POST /api/orders} -- Place order.
+    \item \texttt{GET /api/chats} -- List chat summaries.
+    \item \texttt{POST /api/chats/:id/messages} -- Send message (AI reply if needed).
+    \item And more (see documentation).
+\end{itemize}
+
+% =====================
+% Slide 10: Security & Best Practices
+% =====================
+
+\section*{Slide 10: Security \& Best Practices}
+\begin{itemize}[leftmargin=1cm]
+    \item All sensitive data is encrypted or hashed.
+    \item HTTP-only cookies for JWTs.
+    \item CORS configured for frontend origins.
+    \item Input validation and sanitization throughout.
+    \item Only non-sensitive user data returned in API.
+\end{itemize}
+
+% =====================
+% Slide 11: Scalability & Extensibility
+% =====================
+
+\section*{Slide 11: Scalability \& Extensibility}
+\begin{itemize}[leftmargin=1cm]
+    \item Modular codebase: easy to add new features.
+    \item Can be containerized with Docker for deployment.
+    \item Ready for migration to microservices if needed.
+    \item Real-time and REST APIs can scale horizontally.
+\end{itemize}
+
+% =====================
+% Slide 12: Challenges & Solutions
+% =====================
+
+\section*{Slide 12: Challenges \& Solutions}
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{CORS and Cookies:} Solved with correct middleware and secure cookie settings.
+    \item \textbf{Sensitive Data:} Sanitized all API responses.
+    \item \textbf{Real-Time Chat:} Refactored socket logic for correct message delivery.
+    \item \textbf{AI Integration:} Switched from OpenAI to Gemini for better performance.
+\end{itemize}
+
+% =====================
+% Slide 13: Demo & Walkthrough
+% =====================
+
+\section*{Slide 13: Demo \& Walkthrough}
+\begin{itemize}[leftmargin=1cm]
+    \item Show API calls (login, book appointment, chat).
+    \item Demonstrate real-time chat and AI reply.
+    \item Review error handling and security in action.
+\end{itemize}
+
+% =====================
+% Slide 14: Future Directions (Microservices)
+% =====================
+
+\section*{Slide 14: Future Directions (Microservices)}
+\begin{itemize}[leftmargin=1cm]
+    \item \textbf{Why migrate?} Scalability, independent deployments, fault isolation.
+    \item \textbf{How?} Split by domain: Auth, User, Appointment, Medicine, Order, Chat, AI.
+    \item Each service gets its own repo, Dockerfile, and database.
+    \item Use API Gateway and service discovery.
+    \item Inter-service communication via REST or message queues.
+    \item Centralized logging, monitoring, and security.
+\end{itemize}
+
+% =====================
+% Slide 15: Conclusion
+% =====================
+
+\section*{Slide 15: Conclusion}
+\begin{itemize}[leftmargin=1cm]
+    \item Pharma Connect backend is robust, secure, and extensible.
+    \item Modular monolith enables rapid development and easy maintenance.
+    \item Ready for real-world healthcare challenges and future scaling.
+    \item Thank you for your attention!
+\end{itemize}
+
+\newpage
+
+% =====================
+% Full Presentation Speech (for Speaker)
+% =====================
+
+\section*{Full Presentation Speech}
+
+\textbf{Slide 1: Introduction}\\
+Welcome to the backend presentation of Pharma Connect. Our backend is designed to be robust, secure, and extensible, supporting all the needs of a modern healthcare platform. Today, I'll walk you through our architecture, API, authentication, database, real-time chat, error handling, and future plans.
+
+\vspace{0.3cm}
+\textbf{Slide 2: System Overview}\\
+Pharma Connect's backend enables seamless interactions between patients, doctors, and pharmacies. It covers authentication, user management, appointments, e-commerce, chat, and AI-powered assistance. We use Node.js, Express, MongoDB, Socket.IO, Gemini AI, and JWT. The architecture is a modular monolith, organized by feature for clarity and maintainability.
+
+\vspace{0.3cm}
+\textbf{Slide 3: Codebase Structure}\\
+Our codebase is organized into controllers (business logic), models (Mongoose schemas), routes (API endpoints), sockets (real-time logic), utils (helpers), and config (database connection). The entrypoint sets up middleware, routes, and the Socket.IO server.
+
+\vspace{0.3cm}
+\textbf{Slide 4: API \& Routing}\\
+All APIs are under /api, with modular routers for each domain. Middleware includes CORS, cookie-parser, JWT authentication, and error handling. All private routes require a valid JWT in an HTTP-only cookie.
+
+\vspace{0.3cm}
+\textbf{Slide 5: Authentication \& Security}\\
+Authentication uses JWTs, issued on login or registration. Cookies are secure and HTTP-only. Role-based access control ensures only patients or doctors can access certain endpoints. Passwords are hashed with bcrypt, and sensitive fields are never exposed in API responses.
+
+\vspace{0.3cm}
+\textbf{Slide 6: Database Design}\\
+We use MongoDB with Mongoose. Collections include Patient, Doctor, Appointment, Medicine, Order, and Chat. Relationships are managed via ObjectId references. Schemas enforce validation and business rules for data integrity.
+
+\vspace{0.3cm}
+\textbf{Slide 7: Real-Time Chat \& AI}\\
+Socket.IO enables real-time chat between users and doctors. The AI assistant, powered by Gemini, provides instant, context-aware support. Socket events include joinChat, newMessage, message, and chatHistory. AI replies are generated and broadcast in real time.
+
+\vspace{0.3cm}
+\textbf{Slide 8: Error Handling \& Middleware}\\
+A centralized error controller ensures uniform API responses. The AppError class handles operational errors, and catchAsync wraps async functions. All errors follow a consistent format for easy frontend handling.
+
+\vspace{0.3cm}
+\textbf{Slide 9: API Endpoints}\\
+We provide RESTful endpoints for all business domains: registration, login, user profile, doctor listing, appointment booking, medicine catalog, order placement, chat, and AI messaging. All endpoints are documented and follow best practices.
+
+\vspace{0.3cm}
+\textbf{Slide 10: Security \& Best Practices}\\
+Sensitive data is always encrypted or hashed. JWTs are stored in HTTP-only cookies. CORS is configured for frontend origins. Input validation and sanitization are enforced throughout. Only non-sensitive user data is returned in API responses.
+
+\vspace{0.3cm}
+\textbf{Slide 11: Scalability \& Extensibility}\\
+The modular codebase makes it easy to add new features. The backend can be containerized with Docker for deployment. The architecture is ready for migration to microservices if needed. Both REST and real-time APIs can scale horizontally.
+
+\vspace{0.3cm}
+\textbf{Slide 12: Challenges \& Solutions}\\
+We solved CORS and cookie issues with correct middleware and secure settings. All API responses are sanitized to hide sensitive data. Real-time chat logic was refactored for correct message delivery. AI integration was improved by switching to Gemini.
+
+\vspace{0.3cm}
+\textbf{Slide 13: Demo \& Walkthrough}\\
+We'll now demonstrate API calls (login, booking, chat), real-time chat with AI replies, and review error handling and security in action.
+
+\vspace{0.3cm}
+\textbf{Slide 14: Future Directions (Microservices)}\\
+To further scale, we can migrate to microservices: splitting by domain (Auth, User, Appointment, etc.), giving each service its own repo, Dockerfile, and database. An API Gateway would route requests, and services would communicate via REST or message queues. This enables independent deployments, fault isolation, and even greater scalability.
+
+\vspace{0.3cm}
+\textbf{Slide 15: Conclusion}\\
+Pharma Connect's backend is robust, secure, and extensible. The modular monolith enables rapid development and easy maintenance, and we're ready for real-world healthcare challenges and future scaling. Thank you for your attention!
+
+\end{document}

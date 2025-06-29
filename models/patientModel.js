@@ -79,6 +79,7 @@ patientSchema.pre("save", async function (next) {
   next();
 });
 
+
 /**
  * Method to verify if the provided password matches the stored password.
  * @param {string} candidatePassword - The password provided by the user.

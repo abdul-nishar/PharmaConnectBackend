@@ -1,5 +1,7 @@
 import { protect } from "../controllers/authController.js";
 import chatRouter from "./chatRoutes.js";
+import appointmentRouter from "./appointmentRoutes.js";
+import doctorsRouter from "./doctorRoutes.js";
 import userRouter from "./userRoutes.js";
 import medicineRouter from "./medicineRoutes.js";
 import orderRoutes from "./orderRoutes.js";
@@ -13,6 +15,8 @@ router.use("/users", userRouter);
 router.use("/payment", paymentRoutes);
 router.use(protect);
 router.use("/chat", chatRouter);
+router.use("/appointments", appointmentRouter);
+router.use("/doctors", doctorsRouter);
 router.use("/medicines", medicineRouter);
 router.use("/orders", orderRoutes);
 

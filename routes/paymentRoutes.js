@@ -7,8 +7,8 @@ const router = express.Router();
 const stripe = new Stripe(process.env.STRIPE_BACKEND_SECRET);
 
 router.post("/create-checkout-session", async (req, res) => {
-  const { method, orderData } = req.body;
-  const paymentMethodTypes = method === "upi" ? ["upi"] : ["card"];
+  const { orderData } = req.body;
+  const paymentMethodTypes = ["card"];
 
   try {
     // Create line items from cart data if available

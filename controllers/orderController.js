@@ -12,7 +12,7 @@ export const createOrder = async (req, res) => {
     const validatedItems = [];
 
     for (const item of cart) {
-      const medicine = await Medicine.findById(item._id);
+      const medicine = await Medicine.findById(item.id);
 
       if (!medicine) {
         return res.status(400).json({
