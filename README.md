@@ -2,31 +2,43 @@
 
 ---
 
+## Table of Contents
+- [1. Overview](#1-overview)
+- [2. Getting Started](#2-getting-started)
+- [3. Authentication Flow](#3-authentication-flow)
+- [4. API Documentation](#4-api-documentation)
+- [5. Database Structures](#5-database-structures)
+- [6. Services and Modules](#6-services-and-modules)
+- [7. Error Handling and Logging](#7-error-handling-and-logging)
+
+---
+
 ## 1. Overview
 
 **Purpose:**  
-PharmaConnect Backend is a Node.js/Express REST API that powers a pharmacy and healthcare platform. It manages users (patients/doctors), medicines, orders, and chat, providing secure authentication, data management, and real-time communication.
+PharmaConnect Backend is a Node.js/Express REST API and real-time server for a pharmacy and healthcare platform. It manages users (patients/doctors), medicines, orders, appointments, and chat, providing secure authentication, data management, and live chat with AI assistant integration.
 
 **Tech Stack:**
 - Node.js
 - Express.js
 - MongoDB (Mongoose ODM)
-- Socket.io (for chat)
+- Socket.io (for real-time chat)
 - JWT (JSON Web Tokens) for authentication
 - dotenv for environment management
 - cookie-parser for cookie handling
 - CORS for cross-origin requests
+- Gemini API (Google GenAI) for AI chat assistant
 
 **Architecture Diagram:**
 ```
-[Frontend] <--> [Express REST API] <--> [MongoDB]
+[Frontend] <--> [Express REST API + Socket.io] <--> [MongoDB]
                         |                |
-                  [Socket.io]         [Mongoose]
+                  [Gemini AI]         [Mongoose]
 ```
 
 **Deployment Model:**
-- To be deployed as a containerized Node.js app (e.g., on Render, Heroku, or Docker/Kubernetes)
-- Environment variables managed via `.env` file or platform secrets
+- Deploy as a Node.js app (containerized or on cloud platforms)
+- Environment variables managed via `.env` or platform secrets
 - MongoDB Atlas or managed MongoDB instance
 
 ---
@@ -56,6 +68,7 @@ MONGO_URI=<your-mongodb-uri>
 JWT_SECRET=<your-jwt-secret>
 JWT_COOKIE_EXPIRY_TIME=2d
 NODE_ENV=development
+GEMINI_API_KEY=<your-gemini-api-key>
 ```
 
 ### Running Locally
@@ -108,10 +121,23 @@ npm run dev
 - `GET /` — List all orders (admin)
 - `PATCH /:id/status` — Update order status (admin)
 
+### Appointment Routes (`/api/appointments`)
+- `POST /` — Create appointment
+- `GET /` — List all appointments for user (pagination, filter by status)
+- `GET /:id` — Get single appointment (with access control)
+- `PATCH /:id` — Update appointment (date/time, only if pending)
+- `DELETE /:id` — Cancel appointment (patient only)
+- `PATCH /:id/status` — Update appointment status/report (doctor only)
+
 ### Chat Routes (`/api/chat`)
-- `GET /` — List chats
-- `GET /:id` — Get chat history
-- `POST /chats` — Create chat
+- `POST /` — Create new chat (adds to user's chatIds)
+- `GET /chatSummaries` — List chat summaries for sidebar
+- `GET /:chatId/messages` — Get message history for a chat (access controlled)
+
+#### Real-Time Chat (Socket.io)
+- `joinChat` — Join a chat room, receive `{ messageHistory: [...] }`
+- `newMessage` — Send a new message, all clients receive `message` event with the new message
+- AI assistant replies automatically using Gemini API
 
 ### Error Format
 ```json
@@ -159,6 +185,15 @@ npm run dev
 - `deliveryDate`: Date, required
 - `shippingAddress`: String, required
 
+### Appointment
+- `doctorId`: ObjectId (Doctor), required
+- `patientId`: ObjectId (Patient), required
+- `appointmentDate`: Date, required
+- `appointmentTime`: String, required
+- `consultationFee`: Number
+- `status`: 'Pending' | 'Completed' | 'Cancelled', default 'Pending'
+- `consultationReport`: String (optional)
+
 ### Chat
 - `title`: String, required
 - `lastMessage`: { role, message, timestamp }
@@ -166,9 +201,10 @@ npm run dev
 
 #### Entity Relationship Diagram (ERD)
 ```
-[Patient]---<orderIds>---[Order]---<orderItems>---[Medicine]
+[Patient]---<appointmentIds>---[Appointment]---<doctorId>---[Doctor]
    |                          
    |---<chatIds>---[Chat]
+   |---<orderIds>---[Order]---<orderItems>---[Medicine]
 
 [Doctor]---<appointmentIds>---[Appointment]
 ```
@@ -176,11 +212,11 @@ npm run dev
 ---
 
 ## 6. Services and Modules
-- **Controllers:** Business logic for users, medicines, orders, chat
+- **Controllers:** Business logic for users, medicines, orders, appointments, chat
 - **Models:** Mongoose schemas for all entities
 - **Routes:** API endpoints for each resource
-- **Sockets:** Real-time chat via Socket.io
-- **Utils:** Error handling, async wrappers
+- **Sockets:** Real-time chat via Socket.io, AI integration
+- **Utils:** Error handling, async wrappers, AI client
 
 ---
 
