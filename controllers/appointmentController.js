@@ -70,7 +70,6 @@ export const createAppointment = async(req, res) => {
 // Get all appointments for user
 export const getAllAppointments = async(req, res) => {
     try {
-        const { status, page = 1, limit = 10 } = req.query;
         const userId = req.user._id;
         const userRole = req.user.role;
 
@@ -82,24 +81,15 @@ export const getAllAppointments = async(req, res) => {
             query.doctorId = userId;
         }
 
-        if (status && status !== "all") {
-            query.status = status.charAt(0).toUpperCase() + status.slice(1);
-        }
-
         const appointments = await Appointment.find(query)
             .populate("doctorId", "name specialization location consultationFee")
             .populate("patientId", "name email dateOfBirth")
             .sort({ appointmentDate: -1 })
-            .skip((page - 1) * limit)
-            .limit(limit);
 
-        const total = await Appointment.countDocuments(query);
-
+        console.log(appointments)
         res.status(200).json({
             status: "success",
             results: appointments.length,
-            totalPages: Math.ceil(total / limit),
-            currentPage: page,
             data: {
                 appointments,
             },
@@ -259,7 +249,7 @@ export const deleteAppointment = async(req, res) => {
 };
 
 // Update appointment status (for doctors)
-export const updateAppointmentStatus = async(req, res) => {
+export const updateAppointmentReport = async(req, res) => {
     try {
         const { consultationReport } = req.body;
         const appointment = await Appointment.findById(req.params.id);
@@ -306,5 +296,5 @@ export const appointmentController = {
     getAppointment,
     updateAppointment,
     deleteAppointment,
-    updateAppointmentStatus,
+    updateAppointmentReport,
 };

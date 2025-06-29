@@ -39,6 +39,6 @@ router.get("/", appointmentController.getAllAppointments);
  * @desc Updates appointment status (for doctors to mark as completed and upload report)
  * @access Private
  */
-router.patch("/:id/status", appointmentController.updateAppointmentStatus);
+router.patch("/:id/report", appointmentController.updateAppointmentReport);
 
 export default router;
