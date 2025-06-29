@@ -261,7 +261,7 @@ export const deleteAppointment = async(req, res) => {
 // Update appointment status (for doctors)
 export const updateAppointmentStatus = async(req, res) => {
     try {
-        const { status, consultationReport } = req.body;
+        const { consultationReport } = req.body;
         const appointment = await Appointment.findById(req.params.id);
 
         if (!appointment) {
@@ -279,7 +279,7 @@ export const updateAppointmentStatus = async(req, res) => {
             });
         }
 
-        appointment.status = status;
+        appointment.status = "Completed";
         if (consultationReport) {
             appointment.consultationReport = consultationReport;
         }

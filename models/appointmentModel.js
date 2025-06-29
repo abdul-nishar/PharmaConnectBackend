@@ -27,7 +27,6 @@ const appointmentSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["Pending", "Completed", "Cancelled"],
         default: "Pending",
     },
     consultationFee: {
@@ -41,7 +40,7 @@ const appointmentSchema = mongoose.Schema({
         age: Number,
         weight: Number,
         height: Number,
-        comment: String,
+        comments: String,
         diagnosis: {
             type: String,
         },
