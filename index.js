@@ -15,24 +15,24 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: [
-      "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
-      "http://localhost:5173",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  },
+    cors: {
+        origin: [
+            "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
+            "http://localhost:5173",
+        ],
+        methods: ["GET", "POST", "PUT", "DELETE"],
+    },
 });
 //allow port 5173 for Vite development server
 app.use(
-  cors({
-    origin: [
-      "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
-      "http://localhost:5173",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
+    cors({
+        origin: [
+            "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
+            "http://localhost:5173",
+        ],
+        methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
+        credentials: true,
+    })
 );
 app.use(express.json());
 app.use(cookieParser());
@@ -44,8 +44,8 @@ handleSocket(io);
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-  console.log("GET /");
-  res.send("Welcome to the Chat API");
+    console.log("GET /");
+    res.send("Welcome to the Chat API");
 });
 
 server.listen(PORT, () => console.log(`🚀 Server on http://localhost:${PORT}`));

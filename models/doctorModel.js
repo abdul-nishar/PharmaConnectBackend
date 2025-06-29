@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import validator from 'validator';
-import bcrypt from 'bcrypt';
+import mongoose from "mongoose";
+import validator from "validator";
+import bcrypt from "bcrypt";
 
 /**
  * Doctor schema for the application.
@@ -12,58 +12,87 @@ import bcrypt from 'bcrypt';
  */
 
 const doctorSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please tell us your name!'],
-  },
-  email: {
-    type: String,
-    required: [true, 'Please tell us your email address'],
-    unique: true,
-    lowercase: true,
-    validate: [validator.isEmail, 'Please enter a valid email address'],
-  },
-  role: {
-    type: String,
-    enum: ['patient', 'doctor'],
-    default: 'doctor',
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password!'],
-    minlength: 8,
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'Please confirm your password!'],
-    validate: {
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: 'Passwords do not match',
+    name: {
+        type: String,
+        required: [true, "Please tell us your name!"],
     },
-  },
-  specialization: {
-    type: String,
-    required: [true, "Please provide a specialization."],
-  },
-  appointmentIds: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Appointment',
-    }
-],
+    email: {
+        type: String,
+        required: [true, "Please tell us your email address"],
+        unique: true,
+        lowercase: true,
+        validate: [validator.isEmail, "Please enter a valid email address"],
+    },
+    role: {
+        type: String,
+        enum: ["patient", "doctor"],
+        default: "doctor",
+    },
+    password: {
+        type: String,
+        required: [true, "Please provide a password!"],
+        minlength: 8,
+        select: false,
+    },
+    passwordConfirm: {
+        type: String,
+        required: [true, "Please confirm your password!"],
+        validate: {
+            validator: function(el) {
+                return el === this.password;
+            },
+            message: "Passwords do not match",
+        },
+    },
+    specialization: {
+        type: String,
+        required: [true, "Please provide a specialization."],
+        enum: [
+            "Cardiologist",
+            "Neurologist",
+            "Dermatologist",
+            "Pediatrician",
+            "Orthopedic",
+            "Gynecologist",
+            "Psychiatrist",
+            "General Physician",
+            "ENT Specialist",
+            "Ophthalmologist",
+        ],
+    },
+    appointmentIds: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Appointment",
+    }, ],
+    consultationFee: {
+        type: Number
+    },
+    experience:{
+        type: Number
+    },
+    location: {
+        type: String,
+        required: [true, "Please provide your practice location"],
+    },
+    availability: {
+        monday: [String],
+        tuesday: [String],
+        wednesday: [String],
+        thursday: [String],
+        friday: [String],
+        saturday: [String],
+        sunday: [String],
+    },
 });
 
 /**
  * Pre-save middleware to hash the password.
  * @param {Function} next - Callback function to pass control to the next middleware.
  */
-doctorSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, 12);
-  this.passwordConfirm = undefined;
-  next();
+doctorSchema.pre("save", async function(next) {
+    this.password = await bcrypt.hash(this.password, 12);
+    this.passwordConfirm = undefined;
+    next();
 });
 
 /**
@@ -72,9 +101,12 @@ doctorSchema.pre('save', async function (next) {
  * @param {string} userPassword - The stored hashed password.
  * @returns {Promise<boolean>} - Whether the passwords match.
  */
-doctorSchema.methods.passwordVerification = async function (candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword);
+doctorSchema.methods.passwordVerification = async function(
+    candidatePassword,
+    userPassword
+) {
+    return await bcrypt.compare(candidatePassword, userPassword);
 };
-const Doctor = mongoose.model('Doctor', doctorSchema);
+const Doctor = mongoose.model("Doctor", doctorSchema);
 
 export default Doctor;
