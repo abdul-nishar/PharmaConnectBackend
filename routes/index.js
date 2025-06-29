@@ -1,21 +1,23 @@
 import { protect } from "../controllers/authController.js";
 import chatRouter from "./chatRoutes.js";
 import appointmentRouter from "./appointmentRoutes.js";
-import doctorsRouter from "./doctorRoutes.js"
+import doctorsRouter from "./doctorRoutes.js";
 import userRouter from "./userRoutes.js";
-import medicineRouter from "./medicineRoutes.js"
-import orderRoutes from './orderRoutes.js'
+import medicineRouter from "./medicineRoutes.js";
+import orderRoutes from "./orderRoutes.js";
+import paymentRoutes from "./paymentRoutes.js";
 
 import express from "express";
 
-const mainRouter = express.Router();
+const router = express.Router();
 
-mainRouter.use("/users", userRouter);
-mainRouter.use(protect);
-mainRouter.use("/chat", chatRouter);
-mainRouter.use("/appointments", appointmentRouter)
-mainRouter.use("/doctors", doctorsRouter)
-mainRouter.use('/medicines', medicineRouter);
-mainRouter.use('/orders', orderRoutes);
+router.use("/users", userRouter);
+router.use("/payment", paymentRoutes);
+router.use(protect);
+router.use("/chat", chatRouter);
+router.use("/appointments", appointmentRouter);
+router.use("/doctors", doctorsRouter);
+router.use("/medicines", medicineRouter);
+router.use("/orders", orderRoutes);
 
-export default mainRouter;
+export default router;
