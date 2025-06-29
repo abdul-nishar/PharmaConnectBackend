@@ -78,9 +78,11 @@ export const getAllDoctors = async(req, res) => {
 // Get single doctor
 export const getDoctor = async(req, res) => {
     try {
+        console.log(req.params.id)
         const doctor = await Doctor.findById(req.params.id).select(
             "-password -passwordConfirm"
         );
+        console.log(doctor)
 
         if (!doctor) {
             return res.status(404).json({
@@ -108,6 +110,7 @@ export const getDoctorAvailability = async(req, res) => {
     try {
         const { date } = req.query;
         const doctorId = req.params.id;
+        console.log(date)
 
         if (!date) {
             return res.status(400).json({
@@ -125,9 +128,11 @@ export const getDoctorAvailability = async(req, res) => {
         }
 
         // Get day of week
-        const dayOfWeek = new Date(date).toLocaleLowerCase("en-US", {
-            weekday: "long",
-        });
+        
+        const dayOfWeek = new Date(date)
+          .toLocaleDateString("en-US", { weekday: "long" })
+          .toLowerCase();
+
         const availableSlots = doctor.availability[dayOfWeek] || [];
 
         // Get booked appointments for that date

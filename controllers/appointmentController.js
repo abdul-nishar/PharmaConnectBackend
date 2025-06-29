@@ -89,7 +89,7 @@ export const getAllAppointments = async(req, res) => {
         const appointments = await Appointment.find(query)
             .populate("doctorId", "name specialization location consultationFee")
             .populate("patientId", "name email dateOfBirth")
-            .sort({ appointmentDate: -1 })
+            .sort({ appointmentDate: 1 })
             .skip((page - 1) * limit)
             .limit(limit);
 

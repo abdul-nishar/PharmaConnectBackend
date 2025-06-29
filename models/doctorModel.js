@@ -64,6 +64,12 @@ const doctorSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Appointment",
     }, ],
+    consultationFee: {
+        type: Number
+    },
+    experience:{
+        type: Number
+    },
     location: {
         type: String,
         required: [true, "Please provide your practice location"],

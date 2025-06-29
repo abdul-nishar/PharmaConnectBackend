@@ -30,7 +30,7 @@ app.use(
             "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
             "http://localhost:5173",
         ],
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
         credentials: true,
     })
 );
