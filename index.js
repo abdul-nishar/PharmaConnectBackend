@@ -19,6 +19,7 @@ const io = new Server(server, {
         origin: [
             "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
             "http://localhost:5173",
+            "*",
         ],
         methods: ["GET", "POST", "PUT", "DELETE"],
     },
@@ -29,6 +30,7 @@ app.use(
         origin: [
             "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
             "http://localhost:5173",
+            "*",
         ],
         methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
         credentials: true,
@@ -41,7 +43,7 @@ app.use("/api", router);
 
 handleSocket(io);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 app.get("/", (req, res) => {
     console.log("GET /");
