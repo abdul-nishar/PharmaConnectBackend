@@ -20,7 +20,8 @@ const io = new Server(server, {
             "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
             "https://pharmaproject.netlify.app",
             "http://localhost:5173",
-            "https://reimagined-barnacle-9g5w9p956x6276g9-5173.app.github.dev"
+            "https://reimagined-barnacle-9g5w9p956x6276g9-5173.app.github.dev",
+            "https://pharmaconnection.netlify.app"
         ],
         methods: ["GET", "POST", "PUT", "DELETE"],
     },
@@ -32,7 +33,8 @@ app.use(
             "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
             "https://pharmaproject.netlify.app",
             "http://localhost:5173",
-            "https://reimagined-barnacle-9g5w9p956x6276g9-5173.app.github.dev"
+            "https://reimagined-barnacle-9g5w9p956x6276g9-5173.app.github.dev",
+            "https://pharmaconnection.netlify.app"
         ],
         methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
         credentials: true,
