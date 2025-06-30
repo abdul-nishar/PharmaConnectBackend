@@ -17,6 +17,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: [
+            "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
             "https://pharmaproject.netlify.app",
             "http://localhost:5173",
         ],
@@ -27,6 +28,7 @@ const io = new Server(server, {
 app.use(
     cors({
         origin: [
+            "https://fantastic-goggles-57g4pxpqqjjhv47g-5173.app.github.dev",
             "https://pharmaproject.netlify.app",
             "http://localhost:5173",
         ],
