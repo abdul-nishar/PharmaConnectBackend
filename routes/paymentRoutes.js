@@ -5,24 +5,17 @@ import Order from "../models/orderModel.js";
 
 const router = express.Router();
 const stripe = new Stripe(process.env.STRIPE_BACKEND_SECRET);
+const FRONTEND_URL = process.env.FRONTEND_URL
 
 router.post("/create-checkout-session", async (req, res) => {
   const { orderData } = req.body;
   const paymentMethodTypes = ["card"];
 
-  try {
-    // Create line items from cart data if available
-    let lineItems = [
-      {
-        price_data: {
-          currency: "inr",
-          product_data: { name: "Your Product" },
-          unit_amount: 10000, // Rs. 100
-        },
-        quantity: 1,
-      },
-    ];
+  console.log(orderData);
 
+  let lineItems = [];
+
+  try {
     // If orderData with cart is provided, use it to create line items
     if (orderData && orderData.cart && orderData.cart.length > 0) {
       lineItems = orderData.cart.map((item) => ({
@@ -38,13 +31,16 @@ router.post("/create-checkout-session", async (req, res) => {
       }));
     }
 
+    console.log(`${FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`);
+
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: paymentMethodTypes,
       line_items: lineItems,
       mode: "payment",
       success_url:
-        "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:5173/cancel",
+        `${FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${FRONTEND_URL}/cancel`,
       metadata: {
         // Store order information in metadata
         orderId: orderData?.orderId || "",

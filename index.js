@@ -19,6 +19,7 @@ const io = new Server(server, {
         origin: [
             "https://pharmaproject.netlify.app",
             "http://localhost:5173",
+            "https://reimagined-barnacle-9g5w9p956x6276g9-5173.app.github.dev"
         ],
         methods: ["GET", "POST", "PUT", "DELETE"],
     },
@@ -29,6 +30,7 @@ app.use(
         origin: [
             "https://pharmaproject.netlify.app",
             "http://localhost:5173",
+            "https://reimagined-barnacle-9g5w9p956x6276g9-5173.app.github.dev"
         ],
         methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
         credentials: true,
