@@ -1,7 +1,7 @@
 import Chat from "../models/chatModel.js";
 import Patient from "../models/patientModel.js";
 import Doctor from "../models/doctorModel.js";
-import ai from "../utils/aiClient.js";
+import genAI from "../utils/aiClient.js";
 
 // Controller for chat summaries
 export const getChatSummaries = async (req, res) => {
@@ -69,23 +69,28 @@ const formatChatHistoryForGemini = (history) => {
 
 // Controller: Get AI response from Gemini
 export const getAIResponse = async (chatHistory) => {
-  // import ai from openaiClient.js (now Gemini)
-  const contents = formatChatHistoryForGemini(chatHistory);
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents,
-    config: {
-      systemInstruction: `You are a Medical Assistant. You only respond to medical queries 
-      and provide assistance related to healthcare. Do not engage in any other topics. 
-      Listen the user carefully and give a preliminary diagnosis. 
-      If the user asks about something outside of healthcare, politely 
-      redirect them back to medical topics. If the diagnosis is not clear, 
-      ask for more information. 
-      If the diagnosis is serious, suggest they see a doctor.
-      Keep the response concise and focused on the medical issue.`,
-    },
-  });
-  return response.text;
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+    const systemInstruction = `You are a Medical Assistant. You only respond to medical queries 
+    and provide assistance related to healthcare. Do not engage in any other topics. 
+    Listen the user carefully and give a preliminary diagnosis. 
+    If the user asks about something outside of healthcare, politely 
+    redirect them back to medical topics. If the diagnosis is not clear, 
+    ask for more information. 
+    If the diagnosis is serious, suggest they see a doctor.
+    Keep the response concise and focused on the medical issue.`;
+
+    const contents = formatChatHistoryForGemini(chatHistory);
+    const prompt = `${systemInstruction}\n\nConversation:\n${contents}\n\nResponse:`;
+    
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text();
+  } catch (error) {
+    console.error("Error getting AI response:", error);
+    throw error;
+  }
 };
 
 // Controller: Get full message history for a chat (for sockets)
