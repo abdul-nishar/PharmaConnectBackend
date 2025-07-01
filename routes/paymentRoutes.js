@@ -5,13 +5,11 @@ import Order from "../models/orderModel.js";
 
 const router = express.Router();
 const stripe = new Stripe(process.env.STRIPE_BACKEND_SECRET);
-const FRONTEND_URL = process.env.FRONTEND_URL
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 router.post("/create-checkout-session", async (req, res) => {
   const { orderData } = req.body;
   const paymentMethodTypes = ["card"];
-
-  console.log(orderData);
 
   let lineItems = [];
 
@@ -31,15 +29,11 @@ router.post("/create-checkout-session", async (req, res) => {
       }));
     }
 
-    console.log(`${FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`);
-
-
     const session = await stripe.checkout.sessions.create({
       payment_method_types: paymentMethodTypes,
       line_items: lineItems,
       mode: "payment",
-      success_url:
-        `${FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${FRONTEND_URL}/cancel`,
       metadata: {
         // Store order information in metadata
