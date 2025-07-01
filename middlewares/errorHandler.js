@@ -133,4 +133,6 @@ export default (err, req, res, next) => {
 
     sendErrProd(error, req, res);
   }
+
+  next();
 };

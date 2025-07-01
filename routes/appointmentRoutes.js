@@ -8,25 +8,25 @@ const router = express.Router();
  * @desc creates an appointment
  * @access Private
  */
-router.post("/", restrictTo("Patient") ,appointmentController.createAppointment);
+router.post("/", restrictTo("patient") ,appointmentController.createAppointment);
 
 /**
  * @route DELETE /api/appointments/:id
  * @desc Deletes an appointment by given id
  * @access Private
  */
-router.delete("/:id", restrictTo("Patient") ,appointmentController.deleteAppointment);
+router.delete("/:id", restrictTo("patient") ,appointmentController.deleteAppointment);
 
 /**
  * @route PUT /api/appointments/:id
  * @desc Updates an appointment by given id
  * @access Private
  */
-router.patch("/:id", restrictTo("Patient") ,appointmentController.updateAppointment);
+router.patch("/:id", restrictTo("patient") ,appointmentController.updateAppointment);
 
 /**
  * @route GET /api/appointments/
- * @desc Gets all appointments of user (Patient or Doctor)
+ * @desc Gets all appointments of user (patient or Doctor)
  * @access Private
  */
 router.get("/", appointmentController.getAllAppointments);

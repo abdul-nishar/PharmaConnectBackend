@@ -1,10 +1,7 @@
 import express from "express";
 import { doctorController } from "../controllers/doctorController.js";
-import { protect } from "../controllers/authController.js";
 
 const router = express.Router();
-
-router.use(protect);
 
 /**
  * @route   GET /api/doctors

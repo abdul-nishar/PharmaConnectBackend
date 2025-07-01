@@ -1,5 +1,9 @@
-import asyncHandler from "../utils/asyncHandler";
-import AppError from "../utils/appError";
+import { promisify } from 'util';
+import jwt from 'jsonwebtoken';
+import asyncHandler from "../utils/asyncHandler.js";
+import AppError from "../utils/appError.js";
+import Patient from "../models/patientModel.js";
+import Doctor from "../models/doctorModel.js";
 
 /**
  * Middleware to protect routes by verifying the JWT token and setting `req.user`.
@@ -10,6 +14,8 @@ import AppError from "../utils/appError";
  */
 export default asyncHandler(async(req, res, next) => {
     let token;
+
+    console.log("Hello");
 
     if (
         req.headers.authorization &&
@@ -30,10 +36,14 @@ export default asyncHandler(async(req, res, next) => {
     try {
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
+        console.log(decoded)
+
         let currentUser = await Patient.findById(decoded.id);
         if (!currentUser) {
             currentUser = await Doctor.findById(decoded.id);
         }
+
+        console.log(currentUser)
 
         if (!currentUser) {
             return next(
@@ -42,6 +52,7 @@ export default asyncHandler(async(req, res, next) => {
         }
 
         req.user = currentUser;
+        console.log(req.user);
         next();
     } catch (err) {
         if (err.name === "TokenExpiredError") {

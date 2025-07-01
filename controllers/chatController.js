@@ -1,6 +1,5 @@
 import Chat from "../models/chatModel.js";
 import Patient from "../models/patientModel.js";
-import Doctor from "../models/doctorModel.js";
 import genAI from "../utils/aiClient.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/appError.js";
@@ -50,7 +49,7 @@ const formatChatHistoryForGemini = (history) => {
 };
 
 // Controller: Get AI response from Gemini
-export const getAIResponse = asyncHandler(async (chatHistory) => {
+export const getAIResponse = async (chatHistory) => {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     const systemInstruction = `You are a Medical Assistant. You only respond to medical queries 
@@ -66,18 +65,18 @@ export const getAIResponse = asyncHandler(async (chatHistory) => {
     const prompt = `${systemInstruction}\n\nConversation:\n${contents}\n\nResponse:`;
     
     const result = await model.generateContent(prompt);
-    const response = await result.response;
+    const response = result.response;
     return response.text();
-});
+};
 
 // Controller: Get full message history for a chat (for sockets)
-export const getChatHistory = asyncHandler(async (chatId) => {
+export const getChatHistory = async (chatId) => {
   const chat = await Chat.findById(chatId);
   return chat ? chat.messageHistory : [];
-});
+};
 
 // Controller: Add a new message to a chat and return the new message
-export const addMessageToChat = asyncHandler(async (chatId, { role, message }) => {
+export const addMessageToChat = async (chatId, { role, message }) => {
   const msg = {
     role,
     message,
@@ -91,7 +90,7 @@ export const addMessageToChat = asyncHandler(async (chatId, { role, message }) =
     return msg;
   }
   return null;
-});
+};
 
 // Controller: Create a new chat and assign to user
 export const createNewChat = asyncHandler(async (req, res, next) => {

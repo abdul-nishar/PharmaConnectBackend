@@ -1,4 +1,3 @@
-import { promisify } from "util";
 import jwt from "jsonwebtoken";
 import ms from "ms";
 import Patient from "../models/patientModel.js";
