@@ -154,7 +154,6 @@ export const protect = catchAsync(async(req, res, next) => {
     try {
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-        // Try to find user in both Patient and Doctor models
         let currentUser = await Patient.findById(decoded.id);
         if (!currentUser) {
             currentUser = await Doctor.findById(decoded.id);
