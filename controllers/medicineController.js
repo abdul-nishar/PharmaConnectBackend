@@ -1,11 +1,11 @@
 import Medicine from '../models/medicineModel.js';
+import AppError from '../utils/appError.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 // Get all medicines
-export const getAllMedicines = async (req, res) => {
-  try {
+export const getAllMedicines = asyncHandler(async (req, res, next) => {
     const { page = 1, limit = 10, category } = req.query;
     const filter = category ? { category } : {};
-    
     const medicines = await Medicine.find(filter)
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -23,43 +23,26 @@ export const getAllMedicines = async (req, res) => {
         pages: Math.ceil(total / limit)
       }
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching medicines',
-      error: error.message
-    });
-  }
-};
+
+});
 
 // Get medicine by ID
-export const getMedicineById = async (req, res) => {
-  try {
+export const getMedicineById = asyncHandler(async (req, res, next) => {
     const medicine = await Medicine.findById(req.params.id);
     
     if (!medicine) {
-      return res.status(404).json({
-        success: false,
-        message: 'Medicine not found'
-      });
+      return next(new AppError("Medicine not found", 404))
     }
     
     res.json({
       success: true,
       data: medicine
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching medicine',
-      error: error.message
-    });
-  }
-};
+
+});
 
 // Search medicines
-export const searchMedicines = async (req, res) => {
-  try {
+export const searchMedicines = asyncHandler(async (req, res, next) => {
     const { q, category, minPrice, maxPrice } = req.query;
     
     let filter = {};
@@ -88,18 +71,11 @@ export const searchMedicines = async (req, res) => {
       data: medicines,
       count: medicines.length
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error searching medicines',
-      error: error.message
-    });
-  }
-};
+
+});
 
 // Create new medicine (admin only)
-export const createMedicine = async (req, res) => {
-  try {
+export const createMedicine = asyncHandler(async (req, res, next) => {
     const { name, price, shortDesc, image, category } = req.body;
     
     const medicine = new Medicine({
@@ -117,18 +93,11 @@ export const createMedicine = async (req, res) => {
       message: 'Medicine created successfully',
       data: savedMedicine
     });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: 'Error creating medicine',
-      error: error.message
-    });
-  }
-};
+
+});
 
 // Update medicine (admin only)
-export const updateMedicine = async (req, res) => {
-  try {
+export const updateMedicine = asyncHandler(async (req, res, next) => {
     const medicine = await Medicine.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -136,10 +105,7 @@ export const updateMedicine = async (req, res) => {
     );
     
     if (!medicine) {
-      return res.status(404).json({
-        success: false,
-        message: 'Medicine not found'
-      });
+      return next(new AppError("Medicine not found", 404))
     }
     
     res.json({
@@ -147,18 +113,11 @@ export const updateMedicine = async (req, res) => {
       message: 'Medicine updated successfully',
       data: medicine
     });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: 'Error updating medicine',
-      error: error.message
-    });
-  }
-};
+
+});
 
 // Delete medicine (admin only)
-export const deleteMedicine = async (req, res) => {
-  try {
+export const deleteMedicine = asyncHandler(async (req, res, next) => {
     const medicine = await Medicine.findByIdAndDelete(req.params.id);
     
     if (!medicine) {
@@ -172,11 +131,5 @@ export const deleteMedicine = async (req, res) => {
       success: true,
       message: 'Medicine deleted successfully'
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error deleting medicine',
-      error: error.message
-    });
-  }
-};
+
+});

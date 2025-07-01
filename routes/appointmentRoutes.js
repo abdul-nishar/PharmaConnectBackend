@@ -1,31 +1,28 @@
 import express from "express";
 import { appointmentController } from "../controllers/appointmentController.js";
-import { protect } from "../controllers/authController.js";
+import { restrictTo } from "../middlewares/restrictTo.js";
 const router = express.Router();
-
-// Middleware to protect routes
-router.use(protect);
 
 /**
  * @route POST /api/appointments/
  * @desc creates an appointment
  * @access Private
  */
-router.post("/", appointmentController.createAppointment);
+router.post("/", restrictTo("Patient") ,appointmentController.createAppointment);
 
 /**
  * @route DELETE /api/appointments/:id
  * @desc Deletes an appointment by given id
  * @access Private
  */
-router.delete("/:id", appointmentController.deleteAppointment);
+router.delete("/:id", restrictTo("Patient") ,appointmentController.deleteAppointment);
 
 /**
  * @route PUT /api/appointments/:id
  * @desc Updates an appointment by given id
  * @access Private
  */
-router.patch("/:id", appointmentController.updateAppointment);
+router.patch("/:id", restrictTo("Patient") ,appointmentController.updateAppointment);
 
 /**
  * @route GET /api/appointments/
@@ -39,6 +36,6 @@ router.get("/", appointmentController.getAllAppointments);
  * @desc Updates appointment status (for doctors to mark as completed and upload report)
  * @access Private
  */
-router.patch("/:id/report", appointmentController.updateAppointmentReport);
+router.patch("/:id/report", restrictTo("Doctor") , appointmentController.updateAppointmentReport);
 
 export default router;

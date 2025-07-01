@@ -1,9 +1,10 @@
 import Order from "../models/orderModel.js";
 import Medicine from "../models/medicineModel.js";
+import AppError from "../utils/appError.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
 // Create new order
-export const createOrder = async (req, res) => {
-  try {
+export const createOrder = asyncHandler(async (req, res, next) => {
     const customerId = req.user._id;
     const { cart, address, deliveryDate } = req.body;
 
@@ -15,10 +16,7 @@ export const createOrder = async (req, res) => {
       const medicine = await Medicine.findById(item.id);
 
       if (!medicine) {
-        return res.status(400).json({
-          success: false,
-          message: `Medicine with ID ${item.id} not found`,
-        });
+        return next(new AppError(`Medicine with ID ${item.id} not found`, 404))
       }
 
       totalPrice += medicine.price * item.qty;
@@ -47,61 +45,27 @@ export const createOrder = async (req, res) => {
       message: "Order created successfully",
       data: savedOrder,
     });
-  } catch (error) {
-    console.error("Error creating order:", error);
-
-    // Check if it's a validation error
-    if (error.name === "ValidationError") {
-      const validationErrors = Object.values(error.errors).map(
-        (err) => err.message
-      );
-      return res.status(400).json({
-        success: false,
-        message: "Validation error",
-        errors: validationErrors,
-        fullError: error.message,
-      });
-    }
-
-    res.status(400).json({
-      success: false,
-      message: "Error creating order",
-      error: error.message,
-      stack: error.stack,
-    });
-  }
-};
+});
 
 // Get order by ID
-export const getOrderById = async (req, res) => {
-  try {
+export const getOrderById = asyncHandler(async (req, res, next) => {
     const order = await Order.findById(req.params.id)
       .populate("customerId", "name email")
       .populate("orderItems.medicineId", "name price image");
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
+      return next(new AppError("Order not found", 404))
     }
 
     res.json({
       success: true,
       data: order,
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error fetching order",
-      error: error.message,
-    });
-  }
-};
+
+});
 
 // Get all orders for a user
-export const getUserOrders = async (req, res) => {
-  try {
+export const getUserOrders = asyncHandler(async (req, res, next) => {
     const { userId } = req.params;
     const { page = 1, limit = 10, status } = req.query;
 
@@ -128,18 +92,11 @@ export const getUserOrders = async (req, res) => {
         pages: Math.ceil(total / limit),
       },
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error fetching user orders",
-      error: error.message,
-    });
-  }
-};
+
+});
 
 // Get all orders (admin only)
-export const getAllOrders = async (req, res) => {
-  try {
+export const getAllOrders = asyncHandler(async (req, res, next) => {
     const { page = 1, limit = 10, status } = req.query;
 
     let filter = {};
@@ -166,18 +123,11 @@ export const getAllOrders = async (req, res) => {
         pages: Math.ceil(total / limit),
       },
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error fetching orders",
-      error: error.message,
-    });
-  }
-};
+
+});
 
 // Update order status (admin only)
-export const updateOrderStatus = async (req, res) => {
-  try {
+export const updateOrderStatus = asyncHandler(async (req, res, next) => {
     const { status } = req.body;
     const validStatuses = ["pending", "delivered", "cancelled"];
 
@@ -195,10 +145,7 @@ export const updateOrderStatus = async (req, res) => {
     );
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
+      return next(new AppError("Order not found", 404))
     }
 
     res.json({
@@ -206,39 +153,23 @@ export const updateOrderStatus = async (req, res) => {
       message: "Order status updated successfully",
       data: order,
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error updating order status",
-      error: error.message,
-    });
-  }
-};
+
+});
 
 // Cancel order
-export const cancelOrder = async (req, res) => {
-  try {
+export const cancelOrder = asyncHandler(async (req, res, next) => {
     const order = await Order.findById(req.params.id);
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
+      return next(new AppError("Order not found", 404))
     }
 
     if (order.orderStatus === "delivered") {
-      return res.status(400).json({
-        success: false,
-        message: "Cannot cancel delivered order",
-      });
+      return next(new AppError("Cannot cancel delivered order", 400))
     }
 
     if (order.orderStatus === "cancelled") {
-      return res.status(400).json({
-        success: false,
-        message: "Order already cancelled",
-      });
+      return next(new AppError("Order Already cancelled", 400))
     }
 
     order.orderStatus = "cancelled";
@@ -249,11 +180,4 @@ export const cancelOrder = async (req, res) => {
       message: "Order cancelled successfully",
       data: order,
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error cancelling order",
-      error: error.message,
-    });
-  }
-};
+});

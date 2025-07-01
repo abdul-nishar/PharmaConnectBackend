@@ -1,4 +1,4 @@
-import catchAsync from "../utils/catchAsync.js";
+import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/appError.js";
 import Patient from "../models/patientModel.js";
 import Doctor from "../models/doctorModel.js";
@@ -9,7 +9,7 @@ import Doctor from "../models/doctorModel.js";
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  */
-export const getUserProfileData = catchAsync(async (req, res, next) => {
+export const getUserProfileData = asyncHandler(async (req, res, next) => {
   let user;
   
   if (req.user.role === "patient") {
@@ -40,7 +40,7 @@ export const getUserProfileData = catchAsync(async (req, res, next) => {
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  */
-export const getMe = catchAsync(async (req, res, next) => {
+export const getMe = asyncHandler(async (req, res, next) => {
   let user;
   if (req.user.role === "patient") {
     user = await Patient.findById(req.user.id);
@@ -75,7 +75,7 @@ export const getMe = catchAsync(async (req, res, next) => {
  * @param {Function} next - The next middleware function.
  * @throws {AppError} If the request body contains password fields.
  */
-export const updateMe = catchAsync(async (req, res, next) => {
+export const updateMe = asyncHandler(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(
       new AppError(

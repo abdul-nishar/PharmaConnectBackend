@@ -2,10 +2,11 @@ import Chat from "../models/chatModel.js";
 import Patient from "../models/patientModel.js";
 import Doctor from "../models/doctorModel.js";
 import genAI from "../utils/aiClient.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import AppError from "../utils/appError.js";
 
 // Controller for chat summaries
-export const getChatSummaries = async (req, res) => {
-  try {
+export const getChatSummaries = asyncHandler(async (req, res, next) => {
     const user = req.user;
     const chatIds = user.chatIds || [];
     if (!chatIds.length) {
@@ -23,42 +24,23 @@ export const getChatSummaries = async (req, res) => {
       timestamp: chat.lastMessage?.timestamp || null,
     }));
     res.json({ success: true, data: summaries });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error fetching chat summaries",
-      error: error.message,
-    });
-  }
-};
+});
 
 // GET /api/chat/:chatId/messages - Returns message history for a specific chat, only if user has access
-export const getChatMessages = async (req, res) => {
-  try {
+export const getChatMessages = asyncHandler(async (req, res, next) => {
     const user = req.user;
     const chatId = req.params.chatId;
     const chatIds = user.chatIds || [];
     // Check if user has access to this chat
     if (!chatIds.map((id) => id.toString()).includes(chatId)) {
-      return res
-        .status(403)
-        .json({ success: false, message: "Access denied to this chat." });
+      return next(new AppError("Access denied to this chat.", 403))
     }
     const chat = await Chat.findById(chatId);
     if (!chat) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Chat not found." });
+      return next(new AppError("Chat not found.", 404))
     }
     res.json({ success: true, data: chat.messageHistory });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error fetching chat messages",
-      error: error.message,
-    });
-  }
-};
+});
 
 // Helper: Format chat history for Gemini API
 const formatChatHistoryForGemini = (history) => {
@@ -68,8 +50,7 @@ const formatChatHistoryForGemini = (history) => {
 };
 
 // Controller: Get AI response from Gemini
-export const getAIResponse = async (chatHistory) => {
-  try {
+export const getAIResponse = asyncHandler(async (chatHistory) => {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     const systemInstruction = `You are a Medical Assistant. You only respond to medical queries 
@@ -87,20 +68,16 @@ export const getAIResponse = async (chatHistory) => {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     return response.text();
-  } catch (error) {
-    console.error("Error getting AI response:", error);
-    throw error;
-  }
-};
+});
 
 // Controller: Get full message history for a chat (for sockets)
-export const getChatHistory = async (chatId) => {
+export const getChatHistory = asyncHandler(async (chatId) => {
   const chat = await Chat.findById(chatId);
   return chat ? chat.messageHistory : [];
-};
+});
 
 // Controller: Add a new message to a chat and return the new message
-export const addMessageToChat = async (chatId, { role, message }) => {
+export const addMessageToChat = asyncHandler(async (chatId, { role, message }) => {
   const msg = {
     role,
     message,
@@ -114,18 +91,14 @@ export const addMessageToChat = async (chatId, { role, message }) => {
     return msg;
   }
   return null;
-};
+});
 
 // Controller: Create a new chat and assign to user
-export const createNewChat = async (req, res) => {
-  try {
+export const createNewChat = asyncHandler(async (req, res, next) => {
     const { title, systemMessage } = req.body;
     const user = req.user;
     if (!title || !systemMessage) {
-      return res.status(400).json({
-        success: false,
-        message: "Title and systemMessage are required.",
-      });
+      return next(new AppError("Title and systemMessage are required.", 400))
     }
     // Create initial system message
     const initialMsg = {
@@ -141,45 +114,27 @@ export const createNewChat = async (req, res) => {
     });
     await chat.save();
     // Add chatId to user's chatIds
-    if (user.role === "patient") {
-      await Patient.findByIdAndUpdate(user._id, {
-        $push: { chatIds: chat._id },
-      });
-    } else if (user.role === "doctor") {
-      await Doctor.findByIdAndUpdate(user._id, {
-        $push: { chatIds: chat._id },
-      });
-    }
-    res.status(201).json({ success: true, data: chat });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error creating chat",
-      error: error.message,
+    await Patient.findByIdAndUpdate(user._id, {
+      $push: { chatIds: chat._id },
     });
-  }
-};
+
+    res.status(201).json({ success: true, data: chat });
+
+});
 
 // Controller: Delete a chat and remove its reference from user's chatIds
-export const deleteChat = async (req, res) => {
-  try {
+export const deleteChat = asyncHandler(async (req, res, next) => {
     const user = req.user;
     const chatId = req.params.chatId;
     // Check if user has access to this chat
     const chatIds = user.chatIds || [];
     if (!chatIds.map((id) => id.toString()).includes(chatId)) {
-      return res.status(403).json({ success: false, message: "Access denied to this chat." });
+      return next(new AppError("Access denied to this chat.", 403))
     }
     // Remove chat from DB
     await Chat.findByIdAndDelete(chatId);
     // Remove chatId from user's chatIds
-    if (user.role === "patient") {
-      await Patient.findByIdAndUpdate(user._id, { $pull: { chatIds: chatId } });
-    } else if (user.role === "doctor") {
-      await Doctor.findByIdAndUpdate(user._id, { $pull: { chatIds: chatId } });
-    }
+    await Patient.findByIdAndUpdate(user._id, { $pull: { chatIds: chatId } });
+
     res.json({ success: true, message: "Chat deleted successfully." });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Error deleting chat", error: error.message });
-  }
-};
+});
