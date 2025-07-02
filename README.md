@@ -69,6 +69,8 @@ JWT_SECRET=<your-jwt-secret>
 JWT_COOKIE_EXPIRY_TIME=2d
 NODE_ENV=development
 GEMINI_API_KEY=<your-gemini-api-key>
+STRIPE_BACKEND_SECRET=<stripe-backend-key>
+FRONTEND_URL=<frontend-url>
 ```
 
 ### Running Locally
